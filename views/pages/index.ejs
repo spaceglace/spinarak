@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ../partials/head %>
+  </head>
+  <body class="container">
+    <header>
+      <% include ../partials/header %>
+    </header>
+
+    <main>
+      <div id="app">
+        <ul>
+          <chat-message
+            v-for="message in messages"
+            v-bind:message="message"
+            v-bind:key="message.index">
+          </chat-message>
+        </ul>
+      </div>
+    </main>
+
+    <footer>
+      <% include ../partials/footer %>
+    </footer>
+    <% include ../partials/scripts %>
+    <script>
+      Vue.component('chat-message', {
+        props: ['message'],
+        template: '<li>{{ message.user }}: {{message.text }}</li>'
+      })
+
+      let app = new Vue({
+        el: '#app',
+        data: {
+          messages: []
+        }
+      })
+
+      function connect() {
+        let socket = window.MozWebSocket || window.WebSocket || null
+
+        if (socket === null) {
+          alert('Your browser cannot run websockets.')
+          return
+        }
+
+        let ws = new socket('ws://' + location.host)
+        let index = 0
+
+        ws.onmessage = function(message) {
+          console.debug('received %s', message.data)
+          let data = JSON.parse(message.data)
+          console.debug(data)
+          app.messages.push({
+            index: index++,
+            user: data.user,
+            text: data.text
+          })
+        }
+      }
+
+      connect()
+    </script>
+  </body>
+</html>
