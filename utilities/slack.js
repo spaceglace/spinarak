@@ -34,3 +34,7 @@ module.exports.sendReply = function (message, text) {
     console.error('sendReply error: %s', error)
   })
 }
+
+module.exports.broadcast = function(channel, text) {
+  rtm.sendMessage(text, channel)
+}

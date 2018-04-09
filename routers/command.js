@@ -1,9 +1,11 @@
 'use strict'
 
 const hello = require('../commands/hello')
+const foundation = require('../commands/foundation')
 
 const linkings = [
-  { filter: /^hello$/, action:hello.greeting }
+  { filter: /^hello$/, action:hello.greeting },
+  { filter: /^running foundations$/, action:foundation.running }
 ]
 
 module.exports.route = function(message) {
